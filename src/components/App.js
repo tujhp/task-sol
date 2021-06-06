@@ -4,6 +4,19 @@ import './App.css'
 import ZNToken from '../abis/ZNToken.json'
 import ShopContract from '../abis/ShopContract.json'
 import Web3 from 'web3'
+import Register from './Register'
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
+import Main from './Main'
+import Cart from './Cart'
+import Home from './Home'
+import Products from './Products'
+import Purchases from './Purchases'
+import Promocodes from './Promocodes'
 
 class App extends Component {
 
@@ -16,7 +29,7 @@ class App extends Component {
     const web3 = window.web3
     const accounts = await window.web3.eth.getAccounts();
     this.setState({ account: accounts[0] })
-
+    console.log('LoadBlockchain')
     const networkId = await web3.eth.net.getId()
 
     //Load ZNToken
@@ -39,6 +52,10 @@ class App extends Component {
       window.alert('ShopContrct is not deployed')
     }
 
+    let isRegistered =  await this.isRegistered(this.state.account)
+    let isAdmin = await this.isAdmin(this.state.account)
+    this.setState({ admin: isAdmin })
+    this.setState({ registered: isRegistered })
     this.setState({ loading: false })
   }
 
@@ -55,6 +72,27 @@ class App extends Component {
     }
   }
 
+  async isRegistered(account) {
+    let result = await this.state.shopContract.methods.isRegister(account).call({from:this.state.account})
+    return result
+  }
+
+  async isAdmin(account) {
+    let result = await this.state.shopContract.methods.isAdmin(account).call({from: this.state.account})
+    console.log(result, "admin");
+    return result;
+  }
+
+  register = (username) => {
+    this.setState({ username: username })
+    this.state.shopContract.methods.register(username, 'user').send({ from: this.state.account }).on('transactionHash', (hash) => {
+      window.location.href = "/"
+    })
+  }
+
+
+
+
   constructor(props) {
     super(props)
     this.state = {
@@ -63,34 +101,35 @@ class App extends Component {
       shopContract: {},
       znTokenBalance: '0',
       shopContractBalance: '0',
+      registered: false,
+      admin: false,
       loading: true
     }
   }
 
   render() {
-    return (
-      <div>
-        <Navbar account={this.state.account} />
-        <div className="container-fluid mt-5">
-          <div className="row">
-            <main role="main" className="col-lg-12 ml-auto mr-auto" style={{ maxWidth: '600px' }}>
-              <div className="content mr-auto ml-auto">
-                <a
-                  href="http://www.dappuniversity.com/bootcamp"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                </a>
-
-                <h1>Hello, World!</h1>
-                <h1>Balance: {window.web3.utils.fromWei(this.state.znTokenBalance, 'Ether')}</h1>
-
-              </div>
-            </main>
-          </div>
+    if(this.state.registered == true) {
+      return (
+        <div>
+          <Navbar account={this.state.account}
+                  admin={this.state.admin} />
+          <Router>
+            <Switch>
+              <Route path="/home" component={Home}/>
+              <Route path="/products" component={Products}/>
+              <Route path="/cart" component={Cart}/>
+              <Route path="/purchases" component={Purchases}/>
+              <Route path="/promocodes" component={Promocodes}/>
+            </Switch>
+          </Router>
         </div>
-      </div>
-    );
+      );
+    } else {
+      return (
+        <Register register={this.register}
+                  account={this.state.account}/>
+      )
+    }
   }
 }
 

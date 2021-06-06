@@ -12,6 +12,7 @@ contract ShopContract {
         uint balance;
         string[] purchased;
         string role;
+        uint register;
     }
 
     struct Product {
@@ -30,7 +31,7 @@ contract ShopContract {
         owner = msg.sender;
         znToken = _znToken;
         string[] memory _a;
-        users[msg.sender] = User("admin", msg.sender, 300000, _a, "admin");
+        users[msg.sender] = User("admin", msg.sender, 300000, _a, "admin", 1);
     }
 
     modifier onlyOwner() {
@@ -43,9 +44,25 @@ contract ShopContract {
         _;
     }
 
+    function isRegister(address _wallet) public returns (bool){
+        if(users[msg.sender].wallet == msg.sender) {
+            return true;
+        }
+
+        return false;
+    }
+
+    function isAdmin(address _wallet) public returns (bool) {
+        if(keccak256(abi.encodePacked(users[msg.sender].role)) == keccak256(abi.encodePacked("admin"))) {
+            return true;
+        }
+
+        return false;
+    }
+
     function register(string memory _nickname, string memory _role) public {
         string[] memory _cart;
-        users[msg.sender] = User(_nickname, msg.sender, 0, _cart, _role);
+        users[msg.sender] = User(_nickname, msg.sender, 0, _cart, _role, 1);
     }
 
     function createProduct(string memory _name, uint _price) public onlyAdmin returns(uint) {
