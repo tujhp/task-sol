@@ -70,10 +70,15 @@ contract ShopContract {
         products[_name] = _price;
     }
 
-    function generatePromocode(uint amount) public onlyAdmin returns (bytes32) {
-        require(amount <= 1000);
-        bytes32 promocode = keccak256(abi.encodePacked(amount + uint(msg.sender)));
-        promocodes[promocode] = amount;
+    function getPromocode(uint _amount) public onlyAdmin returns (bytes32) {
+        return generatePromocode(_amount, msg.sender);
+        
+    }
+
+    function generatePromocode(uint _amount, address _wallet) private returns (bytes32) {
+        require(_amount <= 1000);
+        bytes32 promocode = keccak256(abi.encodePacked(_amount + uint(_wallet)));
+        promocodes[promocode] = _amount;
         return promocode;
     }
 

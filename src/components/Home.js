@@ -17,7 +17,6 @@ class Home extends Component {
 
               <h1>Hello, World!</h1>
               <h1>Balance: {this.props.account}</h1>
-
             </div>
           </main>
         </div>

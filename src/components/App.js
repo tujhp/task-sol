@@ -79,7 +79,6 @@ class App extends Component {
 
   async isAdmin(account) {
     let result = await this.state.shopContract.methods.isAdmin(account).call({from: this.state.account})
-    console.log(result, "admin");
     return result;
   }
 
@@ -89,6 +88,13 @@ class App extends Component {
       window.location.href = "/"
     })
   }
+
+  generatePromocode = (sum) => {
+    let result = this.state.shopContract.methods.getPromocode(sum).call({from: this.state.account})
+    return result
+  }
+
+  
 
 
 
@@ -108,28 +114,30 @@ class App extends Component {
   }
 
   render() {
-    if(this.state.registered == true) {
-      return (
-        <div>
+    let content
+    if (this.state.loading) {
+      content = <p id="loader" className="text-center">Loading...</p>
+    }
+    else if(this.state.registered == true) {
+        content = <div>
           <Navbar account={this.state.account}
                   admin={this.state.admin} />
           <Router>
             <Switch>
-              <Route path="/home" component={Home}/>
-              <Route path="/products" component={Products}/>
-              <Route path="/cart" component={Cart}/>
-              <Route path="/purchases" component={Purchases}/>
-              <Route path="/promocodes" component={Promocodes}/>
+              <Route exact path="/" render={(props) => (<Home {...this.state}/>)}/>
+              <Route path="/products" render={(props) => (<Products {...this.state}/>)}/>
+              <Route path="/cart" render={(props) => (<Cart {...this.state}/>)}/>
+              <Route path="/purchases" render={(props) => (<Purchases {...this.state}/>)}/>
+              <Route path="/promocodes" render={(props) => (<Promocodes {...this.state} generatePromocode={this.generatePromocode}/>)}/>
             </Switch>
           </Router>
         </div>
-      );
+      
     } else {
-      return (
-        <Register register={this.register}
-                  account={this.state.account}/>
-      )
+        content = <Register register={this.register} account={this.state.account}/>
     }
+
+    return content;
   }
 }
 
