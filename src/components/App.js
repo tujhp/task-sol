@@ -17,6 +17,7 @@ import Home from './Home'
 import Products from './Products'
 import Purchases from './Purchases'
 import Promocodes from './Promocodes'
+import Deposit from './Deposit'
 
 class App extends Component {
 
@@ -33,27 +34,33 @@ class App extends Component {
     const networkId = await web3.eth.net.getId()
 
     //Load ZNToken
-    const znTokenData = ZNToken.networks[networkId]
-    if(znTokenData) {
-      const znToken = new web3.eth.Contract(ZNToken.abi, znTokenData.address)
-      this.setState({ znToken })
-      let znTokenBalance = await znToken.methods.balanceOf(this.state.account).call()
-      this.setState({ znTokenBalance: znTokenBalance.toString()})
-    } else {
-      window.alert('ZNToken contract not deployed to detected network')
-    }
+    // const znTokenData = ZNToken.networks[networkId]
+    // if(znTokenData) {
+    //   const znToken = new web3.eth.Contract(ZNToken.abi, znTokenData.address)
+    //   this.setState({ znToken })
+    //   let znTokenBalance = await znToken.methods.balanceOf(this.state.account).call()
+    //   this.setState({ znTokenBalance: znTokenBalance.toString()})
+    // } else {
+    //   window.alert('ZNToken contract not deployed to detected network')
+    // }
 
     //Load ShopContract
     const shopContractData = ShopContract.networks[networkId]
     if(shopContractData) {
       const shopContract = new web3.eth.Contract(ShopContract.abi, shopContractData.address)
+      const shopContractBalance = await shopContract.methods.balanceOf(this.state.account).call()
+      console.log(shopContractBalance, 666)
       this.setState({ shopContract })
+      this.setState({ shopContractBalance: shopContractBalance.toString()})
     } else {
       window.alert('ShopContrct is not deployed')
     }
 
     let isRegistered =  await this.isRegistered(this.state.account)
     let isAdmin = await this.isAdmin(this.state.account)
+    let isExis = this.getDiscont("0x5857eec3dbd863d46ddaa9ff92b7589f728c8811a010c7adcf424549d40f2953")
+    let products = await this.getProducts()
+    this.setState({products: products})
     this.setState({ admin: isAdmin })
     this.setState({ registered: isRegistered })
     this.setState({ loading: false })
@@ -70,6 +77,11 @@ class App extends Component {
     else {
       window.alert('Non-Ethereum browser detected')
     }
+  }
+
+  async getDiscont(promocode) {
+    let result = await this.state.shopContract.methods.isExist(promocode).call({form:this.state.account})
+    return result;
   }
 
   async isRegistered(account) {
@@ -94,6 +106,25 @@ class App extends Component {
     return result
   }
 
+  deposit = (amount) => {
+    this.state.shopContract.methods.deposit().send({from: this.state.account, value: amount})
+  }
+
+  addProductToCart = (name, promocode) => {
+    console.log(name, promocode)
+    this.state.shopContract.methods.addProductToCart(name, promocode).call({from: this.state.account})
+    console.log(20)
+  }
+
+  
+ async getProducts() {
+    let products = {'flag': 0, 'prod 1': 0, 'prod 2': 0}
+    for(var key in products) {
+      products[key] = await this.state.shopContract.methods.products(key).call({from: this.state.account})
+    }
+    return products
+  }
+
   
 
 
@@ -109,7 +140,8 @@ class App extends Component {
       shopContractBalance: '0',
       registered: false,
       admin: false,
-      loading: true
+      loading: true,
+      products: {}
     }
   }
 
@@ -125,9 +157,10 @@ class App extends Component {
           <Router>
             <Switch>
               <Route exact path="/" render={(props) => (<Home {...this.state}/>)}/>
-              <Route path="/products" render={(props) => (<Products {...this.state}/>)}/>
+              <Route path="/products" render={(props) => (<Products {...this.state} addProductToCart={this.addProductToCart} products={this.state.products}/>)}/>
               <Route path="/cart" render={(props) => (<Cart {...this.state}/>)}/>
               <Route path="/purchases" render={(props) => (<Purchases {...this.state}/>)}/>
+              <Route path="/deposit" render={(props) => (<Deposit {...this.state} deposit={this.deposit}/>)}/>
               <Route path="/promocodes" render={(props) => (<Promocodes {...this.state} generatePromocode={this.generatePromocode}/>)}/>
             </Switch>
           </Router>

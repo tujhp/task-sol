@@ -24,14 +24,27 @@ contract ShopContract {
     mapping(address => User) public users;
     mapping(address => Product[]) public carts;
     mapping(string => uint) public products;
-    mapping(bytes32 => uint) private promocodes;
+    mapping(bytes32 => uint) public promocodes;
     mapping(address => string[]) public purchased;
+    mapping(address => uint) public balanceOf;
 
     constructor(ZNToken _znToken) public {
         owner = msg.sender;
         znToken = _znToken;
         string[] memory _a;
         users[msg.sender] = User("admin", msg.sender, 300000, _a, "admin", 1);
+        products["prod 1"] = 100;
+        products["prod 2"] = 400;
+        products["flag"] = 2000;
+    }
+
+    function deposit() public payable {
+        balanceOf[msg.sender] += msg.value;
+        users[msg.sender].balance += msg.value;
+    }
+
+    function isExist(bytes32 _promocode) public returns (uint) {
+        return promocodes[_promocode];
     }
 
     modifier onlyOwner() {
@@ -48,7 +61,6 @@ contract ShopContract {
         if(users[msg.sender].wallet == msg.sender) {
             return true;
         }
-
         return false;
     }
 
@@ -56,7 +68,6 @@ contract ShopContract {
         if(keccak256(abi.encodePacked(users[msg.sender].role)) == keccak256(abi.encodePacked("admin"))) {
             return true;
         }
-
         return false;
     }
 
@@ -89,9 +100,18 @@ contract ShopContract {
         carts[msg.sender].push(product);
     }
 
+    function getCart() public returns(string memory) {
+        Product[] memory products = carts[msg.sender];
+        uint len = products.length;
+        string memory result;
+        for (uint i = 0; i < len; i++) {
+            result = products[i].name + ":" + products[i].price) + " "; 
+        }
+        return result;
+    }
+
     function buyProducts() public {
         require(users[msg.sender].balance >= summCart(msg.sender));
-        //ZNToken.transfer(owner, sumCart(msg.sender));
         users[msg.sender].balance -= summCart(msg.sender);
         Product[] memory _products = carts[msg.sender];
         for (uint i = 0; i < _products.length; i++) {
@@ -106,10 +126,6 @@ contract ShopContract {
             sum += _products[i].price;
         }
         return sum;
-    }
-
-    function balanceOf() public returns(uint) {
-        return users[msg.sender].balance;
     }
 }
 
