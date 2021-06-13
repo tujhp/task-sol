@@ -33,17 +33,6 @@ class App extends Component {
     console.log('LoadBlockchain')
     const networkId = await web3.eth.net.getId()
 
-    //Load ZNToken
-    // const znTokenData = ZNToken.networks[networkId]
-    // if(znTokenData) {
-    //   const znToken = new web3.eth.Contract(ZNToken.abi, znTokenData.address)
-    //   this.setState({ znToken })
-    //   let znTokenBalance = await znToken.methods.balanceOf(this.state.account).call()
-    //   this.setState({ znTokenBalance: znTokenBalance.toString()})
-    // } else {
-    //   window.alert('ZNToken contract not deployed to detected network')
-    // }
-
     //Load ShopContract
     const shopContractData = ShopContract.networks[networkId]
     if(shopContractData) {
@@ -58,8 +47,12 @@ class App extends Component {
 
     let isRegistered =  await this.isRegistered(this.state.account)
     let isAdmin = await this.isAdmin(this.state.account)
-    let isExis = this.getDiscont("0x5857eec3dbd863d46ddaa9ff92b7589f728c8811a010c7adcf424549d40f2953")
     let products = await this.getProducts()
+    // let purch = await this.getPurchased()
+    // console.log(purch, " - PURCH")
+
+    let cart = await this.getCart()
+    console.log(cart, " - CART")
     this.setState({products: products})
     this.setState({ admin: isAdmin })
     this.setState({ registered: isRegistered })
@@ -79,18 +72,20 @@ class App extends Component {
     }
   }
 
+
+
   async getDiscont(promocode) {
     let result = await this.state.shopContract.methods.isExist(promocode).call({form:this.state.account})
     return result;
   }
 
   async isRegistered(account) {
-    let result = await this.state.shopContract.methods.isRegister(account).call({from:this.state.account})
+    let result = await this.state.shopContract.methods.isRegister().call({from:this.state.account})
     return result
   }
 
   async isAdmin(account) {
-    let result = await this.state.shopContract.methods.isAdmin(account).call({from: this.state.account})
+    let result = await this.state.shopContract.methods.isAdmin().call({from: this.state.account})
     return result;
   }
 
@@ -101,8 +96,24 @@ class App extends Component {
     })
   }
 
+
+  //Подумать как переделать
+
   generatePromocode = (sum) => {
+    let result = this.state.shopContract.methods.getPromocode(sum).send({from: this.state.account}).on('transactionHash', (hash) => {
+      this.getPromocode(sum).then((result) => {
+        console.log(result, 'from promise')
+        document.getElementsByClassName("promocode")[0].innerHTML = `<h2>${result}</h2>`
+      })
+      
+    })
+    // console.log(result)
+    return result
+  }
+
+  getPromocode = (sum) => {
     let result = this.state.shopContract.methods.getPromocode(sum).call({from: this.state.account})
+    console.log(result, "from getPromocode")
     return result
   }
 
@@ -110,12 +121,26 @@ class App extends Component {
     this.state.shopContract.methods.deposit().send({from: this.state.account, value: amount})
   }
 
-  addProductToCart = (name, promocode) => {
+  addProductToCart = (name, promocode="0xfbea6c21784ceb63fb320865a53ff3c14f99f47912c67abcc73e68c634d45426") => {
     console.log(name, promocode)
-    this.state.shopContract.methods.addProductToCart(name, promocode).call({from: this.state.account})
-    console.log(20)
+    this.state.shopContract.methods.addProductToCart(name, promocode).send({from: this.state.account})
   }
 
+  getCart = () => {
+    let result = this.state.shopContract.methods.getCart().call({from: this.state.account})
+    return result
+  }
+
+  getPurchased = () => {
+    let result = this.state.shopContract.methods.getPurchased().call({form: this.state.account})
+    return result
+  }
+
+  buyProducts = () => {
+    this.state.shopContract.methods.buyProducts().send({from: this.state.account})
+  }
+
+  
   
  async getProducts() {
     let products = {'flag': 0, 'prod 1': 0, 'prod 2': 0}
@@ -124,6 +149,8 @@ class App extends Component {
     }
     return products
   }
+
+
 
   
 
@@ -158,8 +185,8 @@ class App extends Component {
             <Switch>
               <Route exact path="/" render={(props) => (<Home {...this.state}/>)}/>
               <Route path="/products" render={(props) => (<Products {...this.state} addProductToCart={this.addProductToCart} products={this.state.products}/>)}/>
-              <Route path="/cart" render={(props) => (<Cart {...this.state}/>)}/>
-              <Route path="/purchases" render={(props) => (<Purchases {...this.state}/>)}/>
+              <Route path="/cart" render={(props) => (<Cart {...this.state} getCart={this.getCart} buyProducts={this.buyProducts}/>)}/>
+              <Route path="/purchases" render={(props) => (<Purchases {...this.state} getPurchase getPurchased={this.getPurchased}/>)}/>
               <Route path="/deposit" render={(props) => (<Deposit {...this.state} deposit={this.deposit}/>)}/>
               <Route path="/promocodes" render={(props) => (<Promocodes {...this.state} generatePromocode={this.generatePromocode}/>)}/>
             </Switch>

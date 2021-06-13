@@ -22,9 +22,8 @@ class Products extends Component {
             <h1 class="card-title pricing-card-title">10900 ZN</h1>
             <form onSubmit={(event) => {
                             event.preventDefault()
-                            let promocode = this.input.value.toString()
+                            let promocode = this.input.value.toString() || "0x0000000000000000000000000000000000000000000000000000000000000000"
                             console.log("promocode: ", promocode)
-                            let price = 100
                             let result = this.props.addProductToCart('prod 1', promocode)
                         }}>
             <button type="submit" class="btn btn-lg btn-block btn-primary">Добавить в корзину</button>
@@ -37,8 +36,13 @@ class Products extends Component {
           </div>
           <div class="card-body">
             <h1 class="card-title pricing-card-title">3490 ZN</h1>
-            <form>
-            <button type="button" class="btn btn-lg btn-block btn-primary">Добавить в корзину</button>
+            <form onSubmit={(event) => {
+                            event.preventDefault()
+                            let promocode = this.input.value.toString() || "0x0000000000000000000000000000000000000000000000000000000000000000"
+                            console.log("promocode: ", promocode)
+                            let result = this.props.addProductToCart('prod 2', promocode)
+                        }}>
+            <button type="submit" class="btn btn-lg btn-block btn-primary">Добавить в корзину</button>
             </form>
           </div>
         </div>
@@ -48,8 +52,13 @@ class Products extends Component {
           </div>
           <div class="card-body">
             <h1 class="card-title pricing-card-title">13333337 ZN</h1>
-            <form>
-            <button type="button" class="btn btn-lg btn-block btn-primary">Добавить в корзину</button>
+            <form onSubmit={(event) => {
+                            event.preventDefault()
+                            let promocode = this.input.value.toString() || "0x0000000000000000000000000000000000000000000000000000000000000000"
+                            console.log("promocode: ", promocode)
+                            let result = this.props.addProductToCart('flag', promocode)
+                        }}>
+            <button type="submit" class="btn btn-lg btn-block btn-primary">Добавить в корзину</button>
             </form>
           </div>
         </div>

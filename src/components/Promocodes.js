@@ -18,9 +18,7 @@ class Promocodes extends Component {
                         onSubmit={(event) => {
                             event.preventDefault()
                             let sum = this.input.value.toString()
-                            let result = this.props.generatePromocode(sum).then((result) => {
-                              document.getElementsByClassName("promocode")[0].innerHTML = `<h2>${result}</h2>`
-                            })
+                            let result = this.props.generatePromocode(sum)
                         }}>
                 <div class="form-group">
                     <label for="exampleInputPassword1">Сумма скидки</label>

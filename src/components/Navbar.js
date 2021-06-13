@@ -32,10 +32,10 @@ class Navbar extends Component {
               <a class="nav-link active" aria-current="page" href="/products">Товары</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" href="/purchases">Покупки</a>
+              <a class="nav-link active" href="/cart">Корзина</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" href="/cart">Корзина</a>
+              <a class="nav-link active" href="/purchases">Покупки</a>
             </li>
             <li class="nav-item">
               <a class="nav-link active" href="/deposit">Внести средства</a>

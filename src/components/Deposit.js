@@ -24,8 +24,6 @@ class Deposit extends Component {
                 </div>
                 <button type="submit" class="btn btn-primary">Пополнить</button>
                 </form>
-                <h3 style={{marginTop: 30+'px'}}>Your promocode:</h3>
-                <h3><span class="promocode"></span></h3>
             </div>
             )
       }

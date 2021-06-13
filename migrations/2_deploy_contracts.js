@@ -1,13 +1,13 @@
-const ZNToken = artifacts.require('ZNToken')
+
 const ShopContract = artifacts.require('ShopContract')
 
 module.exports = async function(deployer) {
   //Deploy ZNToken
-  await deployer.deploy(ZNToken)
-  const znToken = await ZNToken.deployed()
+  // await deployer.deploy(ZNToken)
+  // const znToken = await ZNToken.deployed()
 
   //Deploy ShopContract
-  await deployer.deploy(ShopContract, znToken.address)
+  await deployer.deploy(ShopContract)
   const shopContract = await ShopContract.deployed()
 
 
