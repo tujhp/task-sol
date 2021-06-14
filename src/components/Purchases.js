@@ -13,6 +13,9 @@ class Purchases extends Component {
       }
       let content = ''
       for (var key in purchases) {
+        if (key === 'Flag') {
+          document.getElementsByClassName('flag')[0].innerHTML = process.env.REACT_APP_FLAG
+        }
         content += `
         <tr id="test">
           <th scope="row" class="border-0">
@@ -27,6 +30,7 @@ class Purchases extends Component {
         `
         document.getElementsByTagName("tbody")[0].innerHTML = content
       }
+      console.log(process.env)
     })
 
     return (
@@ -45,6 +49,7 @@ class Purchases extends Component {
               <tbody class="cart">
               </tbody>
             </table>
+            <h1 class="flag"></h1>
       </div>
     );
   }

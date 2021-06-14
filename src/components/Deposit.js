@@ -19,11 +19,15 @@ class Deposit extends Component {
 
                         }}>
                 <div class="form-group">
-                    <label for="exampleInputPassword1">Сумма пополнения</label>
                     <input type="text" ref={(input) => {this.input = input}} class="form-control" placeholder="1 Ether"/>
                 </div>
                 <button type="submit" class="btn btn-primary">Пополнить</button>
+                <br></br>
+                <h3 style={{marginTop: 10 + 'px'}}>0.01 ether == 100 ZN</h3>
+                <h3 style={{marginTop: 10 + 'px'}}>Max balance: 500 ZN</h3>
                 </form>
+
+               
             </div>
             )
       }

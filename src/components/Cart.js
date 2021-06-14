@@ -13,11 +13,10 @@ class Cart extends Component {
           }
           cart[result[i].name] = {price: result[i].price, amount: 1};
       }
+      
 
       let content = ''
       for (var key in cart) {
-        console.log(cart[key])
-        console.log(key)
         content += `
         <tr id="test">
           <th scope="row" class="border-0">
@@ -29,14 +28,15 @@ class Cart extends Component {
           </th>
           <td class="border-0 align-middle"><strong>${cart[key].price} ZN</strong></td>
           <td class="border-0 align-middle"><strong>${cart[key].amount}</strong></td>
-          <td class="border-0 align-middle"><a href="#" class="text-dark"><i class="fa fa-trash"></i></a></td>
         </tr>
         `
         document.getElementsByTagName("tbody")[0].innerHTML = content
       }
     })
-    console.log(cart, 543)
-    //console.log(cart.test)
+
+    this.props.summCart(this.props.account).then((result) => {
+      document.getElementsByClassName("total")[0].innerHTML = `<h4>Total: ${result} ZN</h4>`
+    })
     return (
       <div style={{marginTop: 30 +'px'}} class="table-responsive">
             <table class="table">
@@ -51,15 +51,16 @@ class Cart extends Component {
                   <th scope="col" class="border-0 bg-light">
                     <div class="py-2 text-uppercase">Quantity</div>
                   </th>
-                  <th scope="col" class="border-0 bg-light">
-                    <div class="py-2 text-uppercase">Remove</div>
-                  </th>
                 </tr>
               </thead>
               <tbody class="cart">
               </tbody>
             </table>
-
+            <div class="total" style={{marginLeft: 30 +"px"}}></div>
+            <button style={{marginLeft: 30 +"px"}} type="submit" class="btn btn-danger" onClick={(event) => {
+              event.preventDefault()
+              this.props.clearCart()
+            }}>Очистить корзину</button>
             <button style={{marginLeft: 30 +"px"}} type="submit" class="btn btn-primary" onClick={(event) => {
               event.preventDefault()
               this.props.buyProducts()

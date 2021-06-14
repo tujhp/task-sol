@@ -31,11 +31,14 @@ contract ShopContract {
         string[] memory _a;
         users[msg.sender] = User("admin", msg.sender, _a, "admin", 1);
         balanceOf[msg.sender] = 1 ether;
-        products["prod 1"] = 100;
-        products["prod 2"] = 400;
-        products["flag"] = 2000;
+        products["Ticket 1"] = 100;
+        products["Ticket 2"] = 500;
+        products["Flag"] = 2000;
     }
 
+    function clearCart() public {
+        carts[msg.sender].length = 0;
+    }
     function getCart() public returns (Product[] memory) {
         return carts[msg.sender];
     }
@@ -45,7 +48,8 @@ contract ShopContract {
     }
 
     function deposit() public payable {
-        balanceOf[msg.sender] += msg.value;
+        require(msg.value <= 0.5 ether && balanceOf[msg.sender] + (msg.value / 100000000000000) <= 500);
+        balanceOf[msg.sender] += msg.value / 100000000000000;
     }
 
     modifier onlyOwner() {
@@ -72,16 +76,12 @@ contract ShopContract {
         return false;
     }
 
-    function isExist(bytes32 _promocode) public returns(uint) {
-        return promocodes[_promocode];
-    }
-
     function register(string memory _nickname, string memory _role) public {
         string[] memory _cart;
         users[msg.sender] = User(_nickname, msg.sender, _cart, _role, 1);
     }
 
-    function createProduct(string memory _name, uint _price) public onlyAdmin returns(uint) {
+    function createProduct(string memory _name, uint _price) public onlyOwner returns(uint) {
         require(products[_name] == 0);
         products[_name] = _price;
     }
@@ -90,7 +90,7 @@ contract ShopContract {
         return generatePromocode(_amount, msg.sender);   
     }
 
-    function generatePromocode(uint _amount, address _wallet) public returns (bytes32) {
+    function generatePromocode(uint _amount, address _wallet) public onlyAdmin returns (bytes32) {
         require(_amount <= 1000);
         bytes32 promocode = keccak256(abi.encodePacked(_amount + uint(_wallet)));
         promocodes[promocode] = _amount;
@@ -104,16 +104,6 @@ contract ShopContract {
         carts[msg.sender].push(product);
     }
 
-    // function getCart() public returns(string memory) {
-    //     Product[] memory products = carts[msg.sender];
-    //     uint len = products.length;
-    //     string memory result;
-    //     for (uint i = 0; i < len; i++) {
-    //         result = products[i].name + ":" + products[i].price) + " "; 
-    //     }
-    //     return result;
-    // }
-
     function buyProducts() public {
         require(balanceOf[msg.sender] >= summCart(msg.sender));
         balanceOf[msg.sender] -= summCart(msg.sender);
@@ -121,7 +111,6 @@ contract ShopContract {
         for (uint i = 0; i < _products.length; i++) {
             purchased[msg.sender].push(_products[i].name);
         }
-
         carts[msg.sender].length = 0;
     }
 
@@ -134,5 +123,3 @@ contract ShopContract {
         return sum;
     }
 }
-
-//Не забыть сделать промокоды private(нет не делать пусть кто хочет тот достаёт())
