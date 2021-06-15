@@ -26,6 +26,7 @@ class Promocodes extends Component {
                 </div>
                 <button type="submit" class="btn btn-primary">Получить промокод</button>
                 </form>
+                <h3>Максимальный промокод 400 ZN</h3>
                 <h3 style={{marginTop: 30+'px'}}>Your promocode:</h3>
                 <h3><span class="promocode"></span></h3>
             </div>

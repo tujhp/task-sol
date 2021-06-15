@@ -91,7 +91,7 @@ contract ShopContract {
     }
 
     function generatePromocode(uint _amount, address _wallet) public onlyAdmin returns (bytes32) {
-        require(_amount <= 1000);
+        require(_amount <= 400);
         bytes32 promocode = keccak256(abi.encodePacked(_amount + uint(_wallet)));
         promocodes[promocode] = _amount;
         return promocode;
