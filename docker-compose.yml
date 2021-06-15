@@ -1,0 +1,13 @@
+version: "3"
+services:
+    dapp:
+        build: .
+        ports:
+            - "3000:3000"
+    ganache:
+        build:
+            context: .
+            dockerfile: Dockerfile.ganache
+        ports:
+            - "8545:8545"
+        

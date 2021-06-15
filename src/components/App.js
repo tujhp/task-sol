@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import Navbar from './Navbar'
 import './App.css'
-import ZNToken from '../abis/ZNToken.json'
 import ShopContract from '../abis/ShopContract.json'
 import Web3 from 'web3'
 import Register from './Register'
@@ -11,7 +10,6 @@ import {
   Route,
   Link
 } from "react-router-dom";
-import Main from './Main'
 import Cart from './Cart'
 import Home from './Home'
 import Products from './Products'
@@ -27,7 +25,6 @@ class App extends Component {
   }
 
   async loadBlockchainData() {
-    console.log(process.env)
     const web3 = window.web3
     const accounts = await window.web3.eth.getAccounts();
     this.setState({ account: accounts[0] })
@@ -107,6 +104,10 @@ class App extends Component {
   }
 
   deposit = (amount) => {
+    if (amount < 0) {
+      alert("Только положительные числа")
+      return
+    }
     this.state.shopContract.methods.deposit().send({from: this.state.account, value: amount})
   }
 
@@ -125,7 +126,7 @@ class App extends Component {
   }
 
   buyProducts = () => {
-      this.state.shopContract.methods.buyProducts().send({from: this.state.account})
+      let result = this.state.shopContract.methods.buyProducts().send({from: this.state.account})
   }
 
   summCart = (account) => {
@@ -152,7 +153,6 @@ class App extends Component {
       account: '0x',
       znToken: {},
       shopContract: {},
-      znTokenBalance: '0',
       shopContractBalance: '0',
       registered: false,
       admin: false,
@@ -169,11 +169,11 @@ class App extends Component {
     else if(this.state.registered == true) {
         content = <div>
           <Navbar account={this.state.account}
+                  shopContractBalance={this.state.shopContractBalance}
                   admin={this.state.admin} />
           <Router>
             <Switch>
-              <Route exact path="/" render={(props) => (<Home {...this.state}/>)}/>
-              <Route path="/products" render={(props) => (<Products {...this.state} addProductToCart={this.addProductToCart} products={this.state.products}/>)}/>
+              <Route exact path="/" render={(props) => (<Products {...this.state} addProductToCart={this.addProductToCart} products={this.state.products}/>)}/>
               <Route path="/cart" render={(props) => (<Cart {...this.state} clearCart={this.clearCart} getCart={this.getCart} summCart={this.summCart} buyProducts={this.buyProducts}/>)}/>
               <Route path="/purchases" render={(props) => (<Purchases {...this.state} getPurchased={this.getPurchased}/>)}/>
               <Route path="/deposit" render={(props) => (<Deposit {...this.state} deposit={this.deposit}/>)}/>

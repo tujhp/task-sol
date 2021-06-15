@@ -30,7 +30,6 @@ class Purchases extends Component {
         `
         document.getElementsByTagName("tbody")[0].innerHTML = content
       }
-      console.log(process.env)
     })
 
     return (

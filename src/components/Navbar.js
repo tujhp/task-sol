@@ -22,7 +22,7 @@ class Navbar extends Component {
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="/products">Товары</a>
+              <a class="nav-link active" aria-current="page" href="/">Товары</a>
             </li>
             <li class="nav-item">
               <a class="nav-link active" href="/cart">Корзина</a>
@@ -38,11 +38,11 @@ class Navbar extends Component {
         </div>
       </div>
       <ul className="navbar-nav px-3">
-          <li className="nav-item text-nowrap d-none d-sm-none d-sm-block">
-            <small className="text-secondary">
-              <small id="account">{this.props.account}</small>
-            </small>
+      <li className="nav-item text-nowrap d-none d-sm-none d-sm-block">
+             Balance:  {this.props.shopContractBalance} ZN
+
           </li>
+        
         </ul>
     </nav>
     );
