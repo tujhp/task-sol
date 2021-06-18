@@ -10,7 +10,7 @@ class Products extends Component {
     }
     return (
       <div>
-      <h1 style={{textAlign: 'center', marginTop: 5 + '%', marginBottom: 5 + '%'}}>Товары</h1>
+      <h1 style={{textAlign: 'center', marginTop: 5 + '%', marginBottom: 5 + '%'}}>Products</h1>
       <div class="container">
       <div class="card-deck mb-3 text-center">
         <div class="card mb-4 box-shadow">
@@ -18,17 +18,13 @@ class Products extends Component {
             <h4 class="my-0 font-weight-normal">Ticket 1</h4>
           </div>
           <div class="card-body">
-            <h1 class="card-title pricing-card-title">500 ZN</h1>
+            <h1 class="card-title pricing-card-title">100 ZN</h1>
             <form onSubmit={(event) => {
                             event.preventDefault()
                             let promocode = this.input.value.toString() || "0x0000000000000000000000000000000000000000000000000000000000000000"
                             let result = this.props.addProductToCart('Ticket 1', promocode)
                         }}>
-                                    <ul class="list-unstyled mt-3 mb-4">
-              <li>10 users included</li>
-              <li>2 GB of storage</li>
-            </ul>
-            <button type="submit" class="btn btn-lg btn-block btn-primary">Добавить в корзину</button>
+            <button type="submit" class="btn btn-lg btn-block btn-primary">Add to Cart</button>
             </form>
           </div>
         </div>
@@ -37,17 +33,13 @@ class Products extends Component {
             <h4 class="my-0 font-weight-normal">Ticket 2</h4>
           </div>
           <div class="card-body">
-            <h1 class="card-title pricing-card-title">100 ZN</h1>
+            <h1 class="card-title pricing-card-title">500 ZN</h1>
             <form onSubmit={(event) => {
                             event.preventDefault()
                             let promocode = this.input.value.toString() || "0x0000000000000000000000000000000000000000000000000000000000000000"
                             let result = this.props.addProductToCart('Ticket 2', promocode)
                         }}>
-            <ul class="list-unstyled mt-3 mb-4">
-              <li>10 users included</li>
-              <li>2 GB of storage</li>
-            </ul>
-            <button type="submit" class="btn btn-lg btn-block btn-primary">Добавить в корзину</button>
+            <button type="submit" class="btn btn-lg btn-block btn-primary">Add to Cart</button>
             </form>
           </div>
         </div>
@@ -62,16 +54,13 @@ class Products extends Component {
                             let promocode = this.input.value.toString() || "0x0000000000000000000000000000000000000000000000000000000000000000"
                             let result = this.props.addProductToCart('Flag', promocode)
                         }}>
-                                    <ul class="list-unstyled mt-3 mb-4">
-              <li>10 users included</li>
-              <li>2 GB of storage</li>
-            </ul>
-            <button type="submit" class="btn btn-lg btn-block btn-primary">Добавить в корзину</button>
+
+            <button type="submit" class="btn btn-lg btn-block btn-primary">Add to Cart</button>
             </form>
           </div>
         </div>
       </div>
-      <input type="text" ref={(input) => {this.input = input}} class="form-control btn-lg btn-block" placeholder="Промокод"/>
+      <input type="text" ref={(input) => {this.input = input}} class="form-control btn-lg btn-block" placeholder="Promocode"/>
       </div>
       </div>
     );

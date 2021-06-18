@@ -11,6 +11,6 @@ RUN npm install
 
 # RUN truffle migrate --reset --network ropsten --skipDryRun
 
-RUN truffle migrate --reset
+# RUN truffle migrate
 
-CMD ["npm", "start"]
+# CMD ["npm", "start"]

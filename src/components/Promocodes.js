@@ -8,7 +8,6 @@ class Promocodes extends Component {
     if (this.props.admin) {
         return (
           <div style={{display: 'block', textAlign: 'center', marginTop: 10 + '%', marginBottom: 5 + '%'}}>
-                <h1>Генерация промокодов</h1>
                 <form style={{width: 450 + 'px', 
                             display: 'inline-block', 
                             marginLeft: 'auto', 
@@ -21,13 +20,12 @@ class Promocodes extends Component {
                             let result = this.props.generatePromocode(sum)
                         }}>
                 <div class="form-group">
-                    <label for="exampleInputPassword1">Сумма скидки</label>
                     <input type="text" ref={(input) => {this.input = input}} class="form-control" placeholder="500 ZN"/>
                 </div>
-                <button type="submit" class="btn btn-primary">Получить промокод</button>
+                <button type="submit" class="btn btn-primary">Get promocode</button>
                 </form>
-                <h3>Максимальный промокод 400 ZN</h3>
-                <h3 style={{marginTop: 30+'px'}}>Your promocode:</h3>
+                <h3 style={{marginTop: 10+'px'}}>Maximum 400 ZN</h3>
+                <h3 style={{marginTop: 10+'px'}}>Your promocode:</h3>
                 <h3><span class="promocode"></span></h3>
             </div>
 

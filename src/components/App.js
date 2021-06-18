@@ -93,9 +93,9 @@ class App extends Component {
       })
       return result
   }
-  catch  {
-    document.getElementsByClassName("promocode")[0].innerHTML = `<h2>Промокод не может быть отрицательным</h2>`
-  }
+    catch  {
+      alert('Incorrect amount')
+    }
   }
 
   getPromocode = (sum) => {
@@ -111,8 +111,13 @@ class App extends Component {
     this.state.shopContract.methods.deposit().send({from: this.state.account, value: amount})
   }
 
-  addProductToCart = (name, promocode="0xfbea6c21784ceb63fb320865a53ff3c14f99f47912c67abcc73e68c634d45426") => {
+  addProductToCart = (name, promocode="0x0000000000000000000000000000000000000000000000000000000000000000") => {
+    try {
     this.state.shopContract.methods.addProductToCart(name, promocode).send({from: this.state.account})
+  }
+  catch {
+    alert("Promocode is incorrect")
+  }
   }
 
   getCart = () => {

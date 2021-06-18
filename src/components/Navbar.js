@@ -6,7 +6,7 @@ class Navbar extends Component {
 
     let forAdmin
     if (this.props.admin) {
-      forAdmin = <li class="nav-item"><a class="nav-link active" href="/promocodes">Промокоды</a></li>
+      forAdmin = <li class="nav-item"><a class="nav-link active" href="/promocodes">Promocodes</a></li>
     }
     else {
       forAdmin = <li></li>
@@ -22,16 +22,16 @@ class Navbar extends Component {
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="/">Товары</a>
+              <a class="nav-link active" aria-current="page" href="/">Products</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" href="/cart">Корзина</a>
+              <a class="nav-link active" href="/cart">Cart</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" href="/purchases">Покупки</a>
+              <a class="nav-link active" href="/purchases">Purchases</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" href="/deposit">Внести средства</a>
+              <a class="nav-link active" href="/deposit">Deposit</a>
             </li>
             {forAdmin}
           </ul>

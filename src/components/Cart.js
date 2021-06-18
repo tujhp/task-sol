@@ -60,11 +60,11 @@ class Cart extends Component {
             <button style={{marginLeft: 30 +"px"}} type="submit" class="btn btn-danger" onClick={(event) => {
               event.preventDefault()
               this.props.clearCart()
-            }}>Очистить корзину</button>
+            }}>Delete All</button>
             <button style={{marginLeft: 30 +"px"}} type="submit" class="btn btn-primary" onClick={(event) => {
               event.preventDefault()
               this.props.buyProducts()
-            }}>Купить</button>
+            }}>Buy</button>
           </div>
     )
   }

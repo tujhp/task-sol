@@ -12,6 +12,9 @@ services:
             - "3000:3000"
         depends_on:
             - ganache
+        links:
+            - "ganache:ganache"
+        command: sh -c "truffle migrate && npm start"
 
 
     
